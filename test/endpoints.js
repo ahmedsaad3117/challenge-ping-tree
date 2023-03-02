@@ -205,7 +205,7 @@ test.serial.cb('update target by id endpoint - first target - not success', func
   }
 })
 
-test.serial.cb('makeing decision endpoint - first route - accept ', function (t) {
+test.serial.cb('makeing decision endpoint - first decision - accept ', function (t) {
   var url = '/route'
   var options = { encoding: 'json', method: 'POST' }
 
@@ -229,5 +229,40 @@ test.serial.cb('makeing decision endpoint - first route - accept ', function (t)
     t.is(res.statusCode, 200, 'correct statusCode')
     t.deepEqual(res.body, expected, 'values should match')
     t.end()
+  }
+})
+
+test.serial.cb('makeing decision endpoint - second decision - request more than allows', function (t) {
+  var url = '/route'
+  var options = { encoding: 'json', method: 'POST' }
+
+  var expected = {
+    decision: 'reject'
+  }
+  var visitor = {
+    geoState: 'ca',
+    publisher: 'abc',
+    timestamp: '2018-07-19T15:28:59.513Z'
+  }
+
+  var count = 0
+  var interval = setInterval(function () {
+    servertest(server(), url, options, onResponse)
+      .end(JSON.stringify(visitor))
+
+    count++
+    if (count === 16) {
+      clearInterval(interval)
+    }
+  }, 10)
+
+  function onResponse (err, res) {
+    t.falsy(err, 'no error')
+
+    t.is(res.statusCode, 200, 'correct statusCode')
+    t.deepEqual(res.body, expected, 'values should match')
+    if (count === 10) {
+      t.end()
+    }
   }
 })
