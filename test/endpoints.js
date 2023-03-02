@@ -204,3 +204,30 @@ test.serial.cb('update target by id endpoint - first target - not success', func
     t.end()
   }
 })
+
+test.serial.cb('makeing decision endpoint - first route - accept ', function (t) {
+  var url = '/route'
+  var options = { encoding: 'json', method: 'POST' }
+
+  var expected = {
+    url: 'http://example.com',
+    decision: '0.50'
+
+  }
+  var visitor = {
+    geoState: 'ca',
+    publisher: 'abc',
+    timestamp: '2018-07-19T15:28:59.513Z'
+  }
+
+  servertest(server(), url, options, onResponse)
+    .end(JSON.stringify(visitor))
+
+  function onResponse (err, res) {
+    t.falsy(err, 'no error')
+
+    t.is(res.statusCode, 200, 'correct statusCode')
+    t.deepEqual(res.body, expected, 'values should match')
+    t.end()
+  }
+})
