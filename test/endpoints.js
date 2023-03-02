@@ -57,40 +57,38 @@ test.serial.cb('create target endpoint - first target', function (t) {
   }
 })
 
-
 test.serial.cb('get all targets endpoint', function (t) {
   var url = '/api/targets'
   var options = { encoding: 'json', method: 'GET' }
 
   var expected = {
-    "message": "Targets retrieved successfully",
-    "response": [
-        {
-            "id": 1,
-            "url": "http://example.com",
-            "value": "0.50",
-            "maxAcceptsPerDay": "10",
-            "accept": {
-                "geoState": {
-                    "$in": [
-                        "ca",
-                        "ny"
-                    ]
-                },
-                "hour": {
-                    "$in": [
-                        "13",
-                        "14",
-                        "15"
-                    ]
-                }
-            }
+    message: 'Targets retrieved successfully',
+    response: [
+      {
+        id: 1,
+        url: 'http://example.com',
+        value: '0.50',
+        maxAcceptsPerDay: '10',
+        accept: {
+          geoState: {
+            $in: [
+              'ca',
+              'ny'
+            ]
+          },
+          hour: {
+            $in: [
+              '13',
+              '14',
+              '15'
+            ]
+          }
         }
+      }
     ]
-}
+  }
 
-  servertest(server(), url, options, onResponse)  
-    
+  servertest(server(), url, options, onResponse)
 
   function onResponse (err, res) {
     t.falsy(err, 'no error')
@@ -100,5 +98,3 @@ test.serial.cb('get all targets endpoint', function (t) {
     t.end()
   }
 })
-
-
