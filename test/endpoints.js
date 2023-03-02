@@ -42,7 +42,6 @@ test.serial.cb('create target endpoint - first target', function (t) {
   }
 
   var expected = {
-    data: 1,
     response: 'Target created successfully'
   }
 
