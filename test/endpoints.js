@@ -240,6 +240,25 @@ test.serial.cb('get target by id endpoint - first target', function (t) {
   }
 })
 
+test.serial.cb('get target by id endpoint - target not found', function (t) {
+  var url = '/api/target/4'
+  var options = { encoding: 'json', method: 'GET' }
+
+  var expected = {
+    message: 'Target not found'
+  }
+
+  servertest(server(), url, options, onResponse)
+
+  function onResponse (err, res) {
+    t.falsy(err, 'no error')
+
+    t.is(res.statusCode, 200, 'correct statusCode')
+    t.deepEqual(res.body, expected, 'values should match')
+    t.end()
+  }
+})
+
 test.serial.cb('update target by id endpoint - first target - success', function (t) {
   var url = '/api/target/1'
   var options = { encoding: 'json', method: 'POST' }
