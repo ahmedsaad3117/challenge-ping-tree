@@ -324,6 +324,46 @@ test.serial.cb('update target by id endpoint - first target - not success', func
   }
 })
 
+test.serial.cb('update target by id endpoint - first target - id not found', function (t) {
+  var url = '/api/target/5'
+  var options = { encoding: 'json', method: 'POST' }
+  var updatedTarget = {
+    url: 'http://example.com',
+    value: '0.50',
+    maxAcceptsPerDay: '17',
+    accept: {
+      geoState: {
+        $in: [
+          'ca',
+          'ny'
+        ]
+      },
+      hour: {
+        $in: [
+          '11',
+          '14',
+          '15'
+        ]
+      }
+    }
+  }
+
+  var expected = {
+    message: 'Target not found'
+  }
+
+  servertest(server(), url, options, onResponse)
+    .end(JSON.stringify(updatedTarget))
+
+  function onResponse (err, res) {
+    t.falsy(err, 'no error')
+
+    t.is(res.statusCode, 200, 'correct statusCode')
+    t.deepEqual(res.body, expected, 'Target not found')
+    t.end()
+  }
+})
+
 test.serial.cb('makeing decision endpoint - first decision - accept ', function (t) {
   var url = '/route'
   var options = { encoding: 'json', method: 'POST' }
