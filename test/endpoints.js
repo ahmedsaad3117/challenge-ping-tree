@@ -16,6 +16,25 @@ test.serial.cb('healthcheck', function (t) {
   })
 })
 
+test.serial.cb('get all targets endpoint - targets not found', function (t) {
+  var url = '/api/targets'
+  var options = { encoding: 'json', method: 'GET' }
+
+  var expected = {
+    message: 'Targets not found'
+  }
+
+  servertest(server(), url, options, onResponse)
+
+  function onResponse (err, res) {
+    t.falsy(err, 'no error')
+
+    t.is(res.statusCode, 200, 'correct statusCode')
+    t.deepEqual(res.body, expected, 'values should match')
+    t.end()
+  }
+})
+
 test.serial.cb('create target endpoint - first target', function (t) {
   var url = '/api/targets'
   var options = { encoding: 'json', method: 'POST' }
