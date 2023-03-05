@@ -437,32 +437,30 @@ test.serial.cb('makeing decision endpoint - second decision - request more than 
   var options = { encoding: 'json', method: 'POST' }
 
   var expected = {
-    decision: 'reject'
+    url: 'http://example.com',
+    decision: '0.50'
   }
+
   var visitor = {
     geoState: 'ca',
     publisher: 'abc',
     timestamp: '2018-07-19T15:28:59.513Z'
   }
 
-  var count = 0
-  var interval = setInterval(function () {
-    servertest(server(), url, options, onResponse)
-      .end(JSON.stringify(visitor))
-
-    count++
-    if (count === 12) {
-      clearInterval(interval)
-    }
-  }, 10)
+  var numberOfRuns = 11
 
   function onResponse (err, res) {
     t.falsy(err, 'no error')
-
     t.is(res.statusCode, 200, 'correct statusCode')
     t.deepEqual(res.body, expected, 'values should match')
-    if (count === 12) {
+
+    if (this.currentRun === numberOfRuns - 1) {
       t.end()
     }
+  }
+
+  for (var i = 0; i < numberOfRuns; i++) {
+    servertest(server(), url, options, onResponse.bind({ currentRun: i }))
+      .end(JSON.stringify(visitor))
   }
 })
