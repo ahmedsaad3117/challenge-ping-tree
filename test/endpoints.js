@@ -410,7 +410,7 @@ test.serial.cb('makeing decision endpoint - second decision - request more than 
       .end(JSON.stringify(visitor))
 
     count++
-    if (count === 16) {
+    if (count === 12) {
       clearInterval(interval)
     }
   }, 10)
@@ -420,7 +420,7 @@ test.serial.cb('makeing decision endpoint - second decision - request more than 
 
     t.is(res.statusCode, 200, 'correct statusCode')
     t.deepEqual(res.body, expected, 'values should match')
-    if (count === 10) {
+    if (count === 12) {
       t.end()
     }
   }
